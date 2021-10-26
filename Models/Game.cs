@@ -6,7 +6,7 @@ namespace SaladProject.Models
         public string Name { get; set; }
         public int Added { get; set; }
         public int Metacritic { get; set; }
-        public float Rating { get; set; }
+        public double Rating { get; set; }
         public string Released { get; set; }
         public string Updated { get; set; }
     }

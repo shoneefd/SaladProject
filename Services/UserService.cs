@@ -16,9 +16,9 @@ namespace SaladProject.Services
             Users.Add(user);
             return user;
         }
-        public static void AddGame(int userId, int gameId) {
+        public static void AddGame(int userId, Game game) {
             User user = Get(userId);
-            // Add gameId game to user.
+            user.Games.Add(game);
         }
         public static void RemoveGame(int userId, int gameId) {
             User user = Get(userId);
