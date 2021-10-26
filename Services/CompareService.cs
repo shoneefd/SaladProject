@@ -1,5 +1,4 @@
 using SaladProject.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SaladProject.Services
@@ -24,20 +23,35 @@ namespace SaladProject.Services
         }
         private static Compare UserDifference(User user1, User user2)
         {
-            Compare comparison = new Compare {UserId = user1.UserId, OtherUserId = user2.UserId, Comparison = "Difference"};
-            comparison.Games = user1.Games.Except(user2.Games).ToList();
+            Compare comparison = new Compare
+            {
+                UserId = user1.UserId,
+                OtherUserId = user2.UserId,
+                Comparison = "Difference",
+                Games = user1.Games.Except(user2.Games).ToList()
+            };
             return comparison;
         }
         private static Compare UserIntersection(User user1, User user2)
         {
-            Compare comparison = new Compare {UserId = user1.UserId, OtherUserId = user2.UserId, Comparison = "Intersection"};
-            comparison.Games = user1.Games.Intersect(user2.Games).ToList();
+            Compare comparison = new Compare
+            {
+                UserId = user1.UserId,
+                OtherUserId = user2.UserId,
+                Comparison = "Intersection",
+                Games = user1.Games.Intersect(user2.Games).ToList()
+            };
             return comparison;
         }
         private static Compare UserUnion(User user1, User user2)
         {
-            Compare comparison = new Compare {UserId = user1.UserId, OtherUserId = user2.UserId, Comparison = "Union"};
-            comparison.Games = user1.Games.Union(user2.Games).ToList();
+            Compare comparison = new Compare
+            {
+                UserId = user1.UserId,
+                OtherUserId = user2.UserId,
+                Comparison = "Union",
+                Games = user1.Games.Union(user2.Games).ToList()
+            };
             return comparison;
         }
     }

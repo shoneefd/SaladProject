@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 
 
 namespace SaladProject.Util
@@ -11,7 +11,7 @@ namespace SaladProject.Util
     public static class HttpUtil
     {
         private static readonly HttpClient Client = new HttpClient();
-        private static string _url = "https://api.rawg.io/api/games/";
+        private static string _url = "https://api.rawg.io/api/";
         private static readonly string _key = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "api_key.txt"));
         static HttpUtil()
         {
@@ -20,27 +20,28 @@ namespace SaladProject.Util
             Client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json")
             );
-            Client.DefaultRequestHeaders.Add("key", _key);
         }
         public async static Task<string> QueryGames(string query, string sort)
         {
-            HttpRequestMessage request = new HttpRequestMessage() {
-                Method = HttpMethod.Get
-            };
+            var queryString = HttpUtility.ParseQueryString("");
+            queryString["key"] = _key;
             if (!String.IsNullOrEmpty(query))
             {
-                request.Headers.Add("search", query);
+                queryString["search"] = query;
             }
             if (!String.IsNullOrEmpty(sort))
             {
-                request.Headers.Add("ordering", sort);
+                queryString["ordering"] = sort;
             }
-            HttpResponseMessage response = await Client.SendAsync(request);
-            return await response.Content.ReadAsStringAsync();
+            string queryFull = "games?" + queryString.ToString();
+            return await Client.GetStringAsync(queryFull);
         }
         public async static Task<string> QueryGame(string gameId)
         {
-            return await Client.GetStringAsync(gameId);
+            var queryString = HttpUtility.ParseQueryString("");
+            queryString["key"] = _key;
+            string queryFull = $"games/{gameId}?" + queryString.ToString();
+            return await Client.GetStringAsync(queryFull);
         }
     }
 }

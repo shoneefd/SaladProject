@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SaladProject.Models;
 using SaladProject.Services;
-using SaladProject.Util;
 
 namespace SaladProject.Controllers
 {
@@ -16,9 +11,8 @@ namespace SaladProject.Controllers
     {
         [HttpPost]
         public IActionResult CreateUser() {
-            User user = new User();
-            UserService.Add(user);
-            return CreatedAtAction(nameof(CreateUser), new {userId = user.UserId}, User);
+            User user = UserService.AddNewUser();
+            return CreatedAtAction(nameof(CreateUser), new {userId = user.UserId}, user);
         }
 
         [HttpGet("{userId}")]
@@ -33,14 +27,14 @@ namespace SaladProject.Controllers
         }
 
         [HttpPost("{userId}/games")]
-        public async Task<IActionResult> AddGame(int userId, int gameId)
+        public async Task<IActionResult> AddGame(int userId, GameIdContainer gameId)
         {
             User user = UserService.Get(userId);
             if (user == null)
             {
                 return NotFound();
             }
-            Game game = await GameService.GetGame(gameId);
+            Game game = await GameService.GetGame(gameId.GameId);
             if (game == null)
             {
                 return BadRequest();
@@ -83,24 +77,24 @@ namespace SaladProject.Controllers
         }
         
         [HttpPost("{userId}/comparison")]
-        public ActionResult<Compare> CompareUsers(int userId, int otherUserId, string comparison)
+        public ActionResult<Compare> CompareUsers(int userId, PartialCompare compare)
         {
             User user1 = UserService.Get(userId);
             if (user1 == null)
             {
                 return NotFound();
             }
-            User user2 = UserService.Get(otherUserId);
+            User user2 = UserService.Get(compare.OtherUserId);
             if (user2 == null)
             {
                 return BadRequest();
             }
-            Compare compare = CompareService.CompareUsers(user1, user2, comparison);
-            if (compare == null)
+            Compare comparison = CompareService.CompareUsers(user1, user2, compare.Comparison);
+            if (comparison == null)
             {
                 return BadRequest();
             }
-            return compare;
+            return comparison;
         }
     }
 }

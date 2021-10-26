@@ -1,7 +1,6 @@
 using SaladProject.Models;
 using SaladProject.Util;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -37,9 +36,9 @@ namespace SaladProject.Services
             (
                 !(
                     gameIdJson.TryGetInt32(out int gameId) &&
-                    gameIdJson.TryGetInt32(out int added) &&
-                    gameIdJson.TryGetInt32(out int metacritic) &&
-                    gameIdJson.TryGetDouble(out double rating)
+                    addedJson.TryGetInt32(out int added) &&
+                    metacriticJson.TryGetInt32(out int metacritic) &&
+                    ratingJson.TryGetDouble(out double rating)
                 )
             )
             {
@@ -69,11 +68,15 @@ namespace SaladProject.Services
             return CondenseGame(root);
         }
 
-        private static List<Game> ConvertGameList(string jsonList)
+        private static List<Game> ConvertGameList(string json)
         {
-            JsonElement root = DeserializeJson(jsonList);
+            JsonElement root = DeserializeJson(json);
+            if (!root.TryGetProperty("results", out JsonElement jsonList))
+            {
+                return null;
+            }
             List<Game> lst = new List<Game>();
-            foreach (JsonElement gameJson in root.EnumerateArray())
+            foreach (JsonElement gameJson in jsonList.EnumerateArray())
             {
                 lst.Add(CondenseGame(gameJson));
             }

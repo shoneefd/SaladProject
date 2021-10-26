@@ -7,12 +7,16 @@ namespace SaladProject.Services
     public static class UserService
     {
         static List<User> Users { get; }
-        static int nextId = 0;
+        static int nextId = 1;
+        static UserService() {
+            Users = new List<User>();
+            nextId = 1;
+        }
         public static List<User> GetAll() => Users;
         public static User Get(int id) => Users.FirstOrDefault(u => u.UserId == id);
-        public static User Add(User user)
+        public static User AddNewUser()
         {
-            user.UserId = nextId++;
+            User user = new User { UserId = nextId++, Games = new List<Game>()};
             Users.Add(user);
             return user;
         }

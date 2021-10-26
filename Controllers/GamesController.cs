@@ -1,12 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SaladProject.Models;
 using SaladProject.Services;
-using SaladProject.Util;
 
 namespace SaladProject.Controllers
 {
@@ -17,8 +13,16 @@ namespace SaladProject.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Game>>> getGames(string q, string sort)
         {
-            
-            return await GameService.GetGames(q, sort);
+            List<string> legalSorts = new List<string>
+            {
+                "name", "released", "added", "created", "updated", "rating", "metacritic"
+            };
+            if (!legalSorts.Contains(sort))
+            {
+                return BadRequest();
+            }
+            List<Game> lst = await GameService.GetGames(q, sort);
+            return lst;
         }
     }
 }
