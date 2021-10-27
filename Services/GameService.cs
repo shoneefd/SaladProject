@@ -1,5 +1,7 @@
 using SaladProject.Models;
 using SaladProject.Util;
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,19 +31,62 @@ namespace SaladProject.Services
                 )
             )
             {
+                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "log.txt"), "null1");
+                return null;
+            }
+
+            bool noMetacritic = false;
+
+            if (metacriticJson.ValueKind == JsonValueKind.Null)
+            {
+                noMetacritic = true;
+            }
+
+            if
+            (
+                !(
+                    gameIdJson.TryGetInt32(out int gameId)                    
+                )
+            )
+            {
+                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "log.txt"), "null2");
                 return null;
             }
 
             if
             (
                 !(
-                    gameIdJson.TryGetInt32(out int gameId) &&
-                    addedJson.TryGetInt32(out int added) &&
-                    metacriticJson.TryGetInt32(out int metacritic) &&
+                    addedJson.TryGetInt32(out int added)
+                )
+            )
+            {
+                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "log.txt"), "null3");
+                return null;
+            }
+
+            int metacritic = -1;
+            if (!noMetacritic)
+            {
+                if
+                (
+                    !(
+                        metacriticJson.TryGetInt32(out metacritic)
+                    )
+                )
+                {
+                    File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "log.txt"), "null4");
+                    return null;
+                }
+            }
+
+            if
+            (
+                !(
                     ratingJson.TryGetDouble(out double rating)
                 )
             )
             {
+                File.WriteAllText(Path.Combine(Environment.CurrentDirectory, "log.txt"), "null5");
                 return null;
             }
 
@@ -49,7 +94,6 @@ namespace SaladProject.Services
             string released = releasedJson.GetString();
             string updated = updatedJson.GetString();
             
-
             return new Game
             {
                 GameId = gameId,

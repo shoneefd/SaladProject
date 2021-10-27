@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ namespace SaladProject.Controllers
             {
                 "name", "released", "added", "created", "updated", "rating", "metacritic"
             };
-            if (!legalSorts.Contains(sort))
+            if (!String.IsNullOrEmpty(sort) && !legalSorts.Contains(sort))
             {
                 return BadRequest();
             }

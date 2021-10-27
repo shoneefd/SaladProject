@@ -34,6 +34,7 @@ namespace SaladProject.Util
                 queryString["ordering"] = sort;
             }
             string queryFull = "games?" + queryString.ToString();
+            await File.WriteAllTextAsync(Path.Combine(Environment.CurrentDirectory, "log.txt"), queryFull);
             return await Client.GetStringAsync(queryFull);
         }
         public async static Task<string> QueryGame(string gameId)
